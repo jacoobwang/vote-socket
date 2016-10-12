@@ -1,6 +1,6 @@
 <?php
 
-$file    = __dir__."\\vote.txt";
+$file    = __dir__.DIRECTORY_SEPARATOR."vote.txt";
 $data    = file_get_contents($file);
 $dataArr = explode("|", $data);
 
