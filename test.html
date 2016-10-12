@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>投票小程序</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <style>
+    html, body {
+        position: relative;
+        height: 100%;
+    }
+    body {
+        background: #eee;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color:#000;
+        margin: 0;
+        padding: 0;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 90%;
+        padding: 30px;
+        padding-right: 0px;
+    }
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+        border-radius: 10px;
+    }
+    .cover{
+    	position: absolute;
+    	top: 10%;
+    	left: 10%;
+    	width: 250px;
+    	height: 300px;
+    	color: white;
+    	line-height: 300px;
+    	border-radius: 5px;
+    }
+    .b1{
+    	background-color: #20A0FF;
+    }
+    .b2{
+    	background-color: #13CE66;
+    }
+    .b3{
+    	background-color: #FF4949;
+    }
+    .b4{
+    	background-color: #F7BA2A;
+    }
+    .avatar{
+    	position: absolute;
+    	top: 60%;
+    	left: 40%;
+    }
+    .submit{
+    	position: absolute;
+    	bottom: 10%;
+    	left: 26%;
+    	width: 150px;
+	    box-sizing: border-box;
+	    font-size: 18px;
+	    text-align: center;
+	    text-decoration: none;
+	    color: #FFF;
+	    background-color: #1AAD19;
+	    line-height: 2;
+	    border-radius: 5px;
+    }
+    .toast{
+		display: none;
+		position: fixed;
+		width: 15rem;
+		height: 18rem;
+		left: 12%;
+		top: 10%;
+		padding: 20px;
+		background-color: #5e5e5e;
+		border-radius: 5px;
+		opacity: 0.8;
+		color: #fff;
+		z-index: 1000;
+	}
+	.blue{
+		width: 200px;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 20px;
+		padding-right: 20px;
+		margin-top: 40px;
+		box-sizing: border-box;
+		font-size: 18px;
+		text-align: center;
+		text-decoration: none;
+		color: #FFF;
+		background-color:#1AAD19; 
+		line-height: 2;
+		border-radius: 5px;
+	}
+    </style>
+</head>
+<body>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">     
+            <div class="swiper-slide">
+            	<div class="cover b1">多维度思考</div>
+            	<div class="avatar"><img src="images/guy2.jpg"></div>
+            	<a class="submit" href="javascript:void(0);" va="1">投他一票</a>
+            </div>
+            <div class="swiper-slide">
+            	<div class="cover b2">把时间当朋友</div>
+            	<div class="avatar"><img src="images/guy1.jpg"></div>
+            	<a class="submit" href="javascript:void(0);" va="2">投他一票</a>
+            </div>
+            <div class="swiper-slide">
+            	<div class="cover b4">物勒工名</div>
+            	<div class="avatar"><img src="images/guy3.jpg"></div>
+            	<a class="submit" href="javascript:void(0);" va="3">投他一票</a>
+            </div>
+            <div class="swiper-slide">
+            	<div class="cover b3">未知</div>
+            	<div class="avatar"><img src="images/guy4.jpg"></div>
+            	<a class="submit" href="javascript:void(0);" va="4">投他一票</a>
+            </div>
+        </div>
+        <div id="toast" class="toast">
+			<h4>投票结果正在统计中...</h4>
+		</div>
+    </div>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/jquery-1.8.1.min.js"></script>
+    <script>
+    var swiper = new Swiper('.swiper-container', {
+    	width:360,
+        slidesPerView: 1,
+        centeredSlides: true,
+        paginationClickable: false,
+        spaceBetween: 20,
+        onSlideChangeStart: function(swiper){
+        	$("#toast").hide();
+        },
+        onSlideChangeEnd: function(swiper){
+        	switch(swiper.activeIndex){
+        		case 1:
+        			$(".swiper-wrapper").css("transform","translate3d(-350px, 0px, 0px)");
+        			break;
+        		case 2:
+        			$(".swiper-wrapper").css("transform","translate3d(-710px, 0px, 0px)");
+        			break;	
+        		case 3:
+        			$(".swiper-wrapper").css("transform","translate3d(-1060px, 0px, 0px)");
+        			break;	
+        	}	
+        }	
+    });
+    var r ;
+
+    $(function(){
+    	if(localStorage.voted && localStorage.data){
+    		$(".submit").attr("va",0).html("查看投票结果");
+    		rendData(localStorage.data);
+    	}
+    	$(".submit").on("click",function(){
+    		var isVa = $(this).attr("va");
+    		if(isVa == 0){
+    			$("#toast").show();
+    		}else{
+    			$(".submit").attr("va",0);
+    			sendData("voted="+isVa,doVote);
+    		}
+    	});
+    	r = setInterval('refreshData()',3000);
+    })
+
+    function sendData(d, cb){
+    	$.ajax({
+    		url:"http://www.loadphp.cn/h5/vote/vote.php",
+    		type:"POST",
+    		data: d,
+    		success:function(data){
+    			if (typeof(cb) == "function") cb(data);
+    		}
+    	});
+    }
+
+    function rendData(data){
+    	var toast = document.getElementById("toast"),
+		 	names = {1:'媛媛',2:'丁丁',3:'jacoob',4:'大瑶'},
+    		rs = data.split("|"),
+			p = "",
+			rank = [0,0,0,0];	
+		if(rs.length == 4) clearInterval(r);	
+		rs.forEach(function(i){
+			p += "<p>"+names[i]+"获得一票</p>";
+			rank[i-1] ++;
+		});
+		$(toast).find("p").remove();
+		$(toast).append(p);
+		if(rs.length == 4){
+			var ll = 0;
+			var tmp = rank.concat();
+			tmp.sort();
+			
+			if(tmp[3] == tmp[2]){
+				$(toast).append("<p>哇咔咔，千年难得一遇的平局出现了。</p><p><a id='reset' class='blue' href='javascript:void(0);'>重新开始</a></p>");
+				$("#reset").on("click",function(){doRest()});
+			}else{
+				for(var j in rank){
+					if(rank[j] == tmp[3]) {
+						ll = parseInt(j)+1;
+						break;
+					}	
+				}
+				tmp = null;
+				$(toast).find("h4").html("投票已结束");
+				$(toast).append("<p>恭喜"+names[ll]+"获得票王</p>");
+			}
+		}	
+    }
+
+    function doRest(){
+		localStorage.clear();
+		sendData("reset=1",function(data){
+			$("#toast").hide();
+			$("p").remove();
+			for(var i=0;i<=3;i++){
+				$(".submit:eq("+i+")").attr("va",i+1).html("投他一票");
+			}
+		});
+	}
+
+    function doVote(data){
+    	localStorage.voted = true;
+    	localStorage.data  = data;
+    	rendData(data);
+    	$(".submit").html("查看投票结果");
+    }
+
+    function refreshData(){
+    	if($("#toast").css("display") != "none"){
+    		sendData("refresh=1",doVote);
+    	}
+    }
+
+    </script>
+</body>
+</html>

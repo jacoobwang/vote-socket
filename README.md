@@ -7,6 +7,16 @@
 * 使用swiper实现滑动效果
 
 
+---------------
+
+### 新增
+
+提供一个使用ajax轮训处理方案，模拟websocket，参考文件test.html及vote.php。
+
+体验地址：http://www.loadphp.cn/h5/vote/test.html  (最好在手机上查看)
+
+----------
+
 
 ### 视觉，左右滑动（仿微信读书）
 
